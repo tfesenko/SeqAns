@@ -44,7 +44,7 @@
 
   <body>
     <h2>Show Me Your RNA!</h2>
-    <button id="generate" onclick="downloadSVG('sequence.svg');">Save as SVG</button>
+    <div><button id="generate" onclick="downloadSVG('sequence.svg');">Save as SVG</button></div>
     <script type="text/javascript">
     
 
@@ -53,9 +53,9 @@
       height = 5600 - margin;
 
     var svg = d3.select("body")
-      .append("svg")
-      .attr("width", width + margin)
-      .attr("height", height + margin);
+      .append("div");
+//      .attr("width", width + margin)
+//      .attr("height", height + margin);
 
       var seq1 =
         'ATGGACAAGAAGTATAGCATCGGGCTGGACATTGGAACGAACTCGGTTGGTTGGGCTGTGATTACGGACG' +
@@ -115,7 +115,7 @@
         'AGTTTATCAAGCCGATTTTGGAGAAGATGGACGGCACTGAGGAACTGCTCGTCAAGCTGAATCGCGAAGA' +
         'TTTGCTTCGTAAGCAACGAACGTTCGACAACGGCTCCATCCCGCACCAGATTCATCTGGGCGAGCTCCAC';
 
-      draw([seq1, seq2, seq3]);
+      draw([{sequence:seq1, title:"Human"}, {sequence:seq2, title:"Mouse"}, {sequence:seq3, title:"Yeast"}]);
     </script>
   </body>
   </html>
