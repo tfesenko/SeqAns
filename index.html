@@ -29,13 +29,19 @@
             alert("blob not supported");
         }
 
-        var html = d3.select("svg")
-            .attr("title", "test2")
-            .attr("version", 1.1)
-            .attr("xmlns", "http://www.w3.org/2000/svg")
-            .node().innerHTML;
+        var currY = 0;
+        var gap = 30;
 
-        html = '<svg xmlns="http://www.w3.org/2000/svg">' + html + '</svg>';
+        var html = d3.selectAll("svg")[0].map(function(g, i) {
+          //  debugger;
+            var svgStr = "<!--LINE " + (i+1) + "-->\n<svg y='" + (currY + gap) + "'>" + g.innerHTML + "</svg>";
+            currY += parseInt(g.getAttribute("height"));
+            return svgStr;
+        }).join("\n");
+
+        html = '<svg xmlns="http://www.w3.org/2000/svg" height="' + currY + '">\n'
+            + html +
+            '\n</svg>';
         var blob = new Blob([html], {type: "image/svg+xml"});
         saveAs(blob, fileName);
     };
