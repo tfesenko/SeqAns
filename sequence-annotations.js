@@ -4,14 +4,13 @@ function draw(data) {
             return seq.sequence.length;
         })) / lineLength;
     for (var i = 0; i < numberOfLines; i++) {
-        var dataForLine = data.map(function (seq) {
-            return {title: seq.title, sequence: seq.sequence.slice(i * lineLength, i * lineLength + lineLength)};
-        });
-        drawLine(dataForLine);
+        drawLine(data, i, lineLength);
     }
 };
-function drawLine(data) {
+function drawLine(data, lineIndex, lineLength) {
     "use strict";
+    var from = lineIndex * lineLength;
+    var to = lineIndex * lineLength + lineLength;
     var rootGroup = svg.append("svg").attr("width", "960").attr("height", "200");
     var titleIndent = {x:120, y:20};
 
@@ -23,39 +22,36 @@ function drawLine(data) {
         .attr("text-anchor", "end")
         .attr("transform", function (d, i) {
             return "translate(" + 0 + "," + (titleIndent.y + i * 50 )+ ")";
+        })
+        .each(function (seq) {
+
+            d3.select(this).append("text")
+                .attr("class", "title")
+                .text(seq.title)
+                .attr("x", titleIndent.x)
+                .attr("y", 15)
+                .call(make_editable, "title");
+
+            d3.select(this).append("text")
+                .attr("class", "subtitle")
+                .text("Line " + (lineIndex+1))
+                .attr("x", titleIndent.x)
+                .attr("y", 30)
+                .style("fill", "#999");
         });
+    ;
 
-    rootGroup.selectAll("g.title").each(function (seq) {
-        d3.select(this).selectAll("text.title")
-            .data([seq])
-            .enter().append("text")
-            .text(function (seq) {
-                return seq.title;
-            })
-            .attr("class", "title")
-            .attr("x", titleIndent.x)
-            .attr("y", 15);
-     });
-
-    rootGroup.selectAll("g.title").each(function (seq, i) {
-        d3.select(this).selectAll("text.subtitle")
-            .data([i])
-            .enter().append("text")
-            .text(function (i) {
-                return "Line " + (i+1);
-            })
-            .attr("class", "subtitle")
-            .attr("x", titleIndent.x)
-            .attr("y", 30);
-        //.call(make_editable, "subtitle");
-    });
-
-    // title.append("text")
-    //     .attr("class", "subtitle")
-    //     .attr("x", ''+titleIndent.x)
-    //     .attr("y", "20")
-    //     .attr("dy", "1em")
-    //     .text(function(d) { return "Guilhem d.subtitle"; });
+    // rootGroup.selectAll("g.title").each(function (seq, i) {
+    //     d3.select(this).selectAll("text.subtitle")
+    //         .data([i])
+    //         .enter().append("text")
+    //         .text(function (i) {
+    //             return "Line " + (i+1);
+    //         })
+    //         .attr("class", "subtitle")
+    //         .attr("x", titleIndent.x)
+    //         .attr("y", 30);
+    // });
 
     var lineGroup = rootGroup;
 
@@ -73,7 +69,7 @@ function drawLine(data) {
             .data([sequenceString])
             .enter().append("text")
             .text(function (sequenceString) {
-                return sequenceString.sequence;
+                return sequenceString.sequence.slice(from, to);
             })
             .attr("class", "rna-seq")
             .attr("x", 0)
@@ -111,17 +107,106 @@ function drawLine(data) {
         var currGroup = this;
         d3.select(this).select("text").each(function () {
             var textBox = this.getBBox();
-            drawLetterBoxes(currGroup, sequenceString.sequence, textBox, i);
+            drawLetterBoxes(currGroup, sequenceString.sequence.slice(from, to), textBox, i);
         });
     });
 
+    // From http://bl.ocks.org/GerHobbelt/2653660
+    function make_editable(d, field)
+    {
+        console.log("make_editable", arguments);
+
+        this
+            .on("mouseover", function() {
+                d3.select(this).style("fill", "red");
+            })
+            .on("mouseout", function() {
+                d3.select(this).style("fill", null);
+            })
+            .on("click", function(d) {
+                var p = this.parentNode;
+                console.log(this, arguments);
+
+                // inject a HTML form to edit the content here...
+
+                // bug in the getBBox logic here, but don't know what I've done wrong here;
+                // anyhow, the coordinates are completely off & wrong. :-((
+                var xy = this.getBBox();
+                var p_xy = p.getBBox();
+
+                xy.x -= p_xy.x;
+                xy.y -= p_xy.y;
+
+                var el = d3.select(this);
+                var p_el = d3.select(p);
+
+                var frm = p_el.append("foreignObject");
+
+                var inp = frm
+                    .attr("x", xy.x)
+                    .attr("y", xy.y)
+                    .attr("width", 300)
+                    .attr("height", 25)
+                    .append("xhtml:form")
+                    .append("input")
+                    .attr("value", function() {
+                        // nasty spot to place this call, but here we are sure that the <input> tag is available
+                        // and is handily pointed at by 'this':
+                        this.focus();
+
+                        return d[field];
+                    })
+                    .attr("style", "width: 294px;")
+                    // make the form go away when you jump out (form looses focus) or hit ENTER:
+                    .on("blur", function() {
+                        console.log("blur", this, arguments);
+
+                        var txt = inp.node().value;
+
+                        d[field] = txt;
+                        el
+                            .text(function(d) { return d[field]; });
+
+                        // Note to self: frm.remove() will remove the entire <g> group! Remember the D3 selection logic!
+                        p_el.select("foreignObject").remove();
+                    })
+                    .on("keypress", function() {
+                        console.log("keypress", this, arguments);
+
+                        // IE fix
+                        if (!d3.event)
+                            d3.event = window.event;
+
+                        var e = d3.event;
+                        if (e.keyCode == 13)
+                        {
+                            if (typeof(e.cancelBubble) !== 'undefined') // IE
+                                e.cancelBubble = true;
+                            if (e.stopPropagation)
+                                e.stopPropagation();
+                            e.preventDefault();
+
+                            var txt = inp.node().value;
+
+                            d[field] = txt;
+                            el
+                                .text(function(d) { return d[field]; });
+
+                            // Update all Title labels
+                            d3.selectAll("text.title").text(function(d) { return d[field]; });
+                            // odd. Should work in Safari, but the debugger crashes on this instead.
+                            // Anyway, it SHOULD be here and it doesn't hurt otherwise.
+                            p_el.select("foreignObject").remove();
+                        }
+                    });
+            });
+    };
 
     var labelCounter = 1;
-
     function drawAnnotation(containingSequenceGroup, startCharIndex, endCharIndex) {
         var firstSequenceFrame = containingSequenceGroup.selectAll("text.rna-seq").node().getBBox();
         var lastSequenceFrame = containingSequenceGroup.selectAll("text.rna-seq")[0].pop().getBBox();
-        var letterRectWidth = firstSequenceFrame.width / containingSequenceGroup.select("text.rna-seq").data()[0].sequence.length;
+        var letterRectWidth = firstSequenceFrame.width / (to-from);
 
         function drawSurroundingFrame() {
             var annotationVMargin = 4;
