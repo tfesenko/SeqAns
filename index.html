@@ -6,15 +6,62 @@
   <script src="./lib/FileSaver.js"></script>
   <script src="./sequence-annotations.js"></script>
   <style>
-  h2 {
-    color: black;
-    text-align: center;
-  }
 
   .annotation-rect {
     fill-opacity: 0.0;
     stroke-width: 3;
     stroke: #000;
+  }
+
+  .navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #C1C1C1;
+  }
+
+  .navbar span {
+    float: left;
+  }
+
+  li a, .dropbtn {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  li a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+  }
+
+  li.dropdown {
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  .dropdown-content a:hover {background-color: #f1f1f1}
+
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
 
   </style>
@@ -49,8 +96,17 @@
   </head>
 
   <body>
-    <h2>Show Me Your RNA!</h2>
-    <div><button id="generate" onclick="downloadSVG('sequence.svg');">Save as SVG</button></div>
+
+    <div class="navbar">
+      <span>Sequence Annotations</span>
+      <span class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">File</a>
+        <div class="dropdown-content">
+          <a href="#" onclick="downloadSVG('sequence.svg')">Save as SVG</a>
+        </div>
+      </span>
+    </div>
+
     <script type="text/javascript">
     
 
