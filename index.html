@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="./lib/FileSaver.js"></script>
+  <script src="./lib/ntseq.js"></script>
+  <script src="./load-inputs.js"></script>
   <script src="./sequence-annotations.js"></script>
   <style>
 
@@ -67,7 +69,8 @@
   </style>
 
   <script type="text/javascript">
-    
+
+
     function downloadSVG(fileName){
         
         try {
@@ -102,15 +105,19 @@
       <span class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">File</a>
         <div class="dropdown-content">
+          <a href="#">Load Sequences from a FASTA file:</a>
+          <input type="file" id="files" name="files[]"/>
           <a href="#" onclick="downloadSVG('sequence.svg')">Save as SVG</a>
         </div>
       </span>
     </div>
 
     <script type="text/javascript">
-    
 
-    var margin = 75,
+      document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+
+      var margin = 75,
       width = 1400 - margin,
       height = 5600 - margin;
 
@@ -177,7 +184,7 @@
         'AGTTTATCAAGCCGATTTTGGAGAAGATGGACGGCACTGAGGAACTGCTCGTCAAGCTGAATCGCGAAGA' +
         'TTTGCTTCGTAAGCAACGAACGTTCGACAACGGCTCCATCCCGCACCAGATTCATCTGGGCGAGCTCCAC';
 
-      draw([{sequence:seq1, title:"Human"}, {sequence:seq2, title:"Mouse"}, {sequence:seq3, title:"Yeast"}]);
+      //draw([{sequence:seq1, title:"Human"}, {sequence:seq2, title:"Mouse"}, {sequence:seq3, title:"Yeast"}]);
     </script>
   </body>
   </html>

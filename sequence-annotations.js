@@ -4,14 +4,14 @@ function draw(data) {
             return seq.sequence.length;
         })) / lineLength;
     for (var i = 0; i < numberOfLines; i++) {
-        drawLine(data, i, lineLength);
+        drawLine(data, i, lineLength, numberOfLines);
     }
 };
-function drawLine(data, lineIndex, lineLength) {
+function drawLine(data, lineIndex, lineLength, numberOfLines) {
     "use strict";
     var from = lineIndex * lineLength;
     var to = lineIndex * lineLength + lineLength;
-    var rootGroup = svg.append("svg").attr("width", "960").attr("height", "200");
+    var rootGroup = svg.append("svg").attr("width", "1200").attr("height", "1600");
     var titleIndent = {x:120, y:20};
 
     rootGroup.selectAll("g.title")
@@ -93,6 +93,8 @@ function drawLine(data, lineIndex, lineLength) {
                         return '#B7EAED';
                     case 'C':
                         return '#84BBBE';
+                    default:
+                        return 'white';
                 }
             })
             .attr("x", function (d2, i2) {
