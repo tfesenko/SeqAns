@@ -13,6 +13,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
     var to = lineIndex * lineLength + lineLength;
     var rootGroup = svg.append("svg").attr("width", "1200").attr("height", "1600");
     var titleIndent = {x:120, y:20};
+    var fontSize = 16;
 
     rootGroup.selectAll("g.title")
         .data(data)
@@ -21,7 +22,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
         .attr("class", "title")
         .attr("text-anchor", "end")
         .attr("transform", function (d, i) {
-            return "translate(" + 0 + "," + (titleIndent.y + i * 50 )+ ")";
+            return "translate(" + 0 + "," + (titleIndent.y + i * fontSize )+ ")";
         })
         .each(function (seq) {
 
@@ -29,29 +30,17 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                 .attr("class", "title")
                 .text(seq.title)
                 .attr("x", titleIndent.x)
-                .attr("y", 15)
+                .attr("y", 17)
                 .call(make_editable, "title");
 
-            d3.select(this).append("text")
-                .attr("class", "subtitle")
-                .text("Line " + (lineIndex+1))
-                .attr("x", titleIndent.x)
-                .attr("y", 30)
-                .style("fill", "#999");
+            // d3.select(this).append("text")
+            //     .attr("class", "subtitle")
+            //     .text("Line " + (lineIndex+1))
+            //     .attr("x", titleIndent.x)
+            //     .attr("y", fontSize+2)
+            //     .style("fill", "#999");
         });
     ;
-
-    // rootGroup.selectAll("g.title").each(function (seq, i) {
-    //     d3.select(this).selectAll("text.subtitle")
-    //         .data([i])
-    //         .enter().append("text")
-    //         .text(function (i) {
-    //             return "Line " + (i+1);
-    //         })
-    //         .attr("class", "subtitle")
-    //         .attr("x", titleIndent.x)
-    //         .attr("y", 30);
-    // });
 
     var lineGroup = rootGroup;
 
@@ -61,7 +50,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
         .append("g")
         .attr("class", "rna-seq")
         .attr("transform", function (d, i) {
-            return "translate(" + titleIndent.x + "," + (titleIndent.y + i * 50 )+ ")";
+            return "translate(" + titleIndent.x + "," + (titleIndent.y + i * fontSize )+ ")";
         });
 
     lineGroup.selectAll("g.rna-seq").each(function (sequenceString) {
@@ -73,9 +62,9 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             })
             .attr("class", "rna-seq")
             .attr("x", 0)
-            .attr("y", 30)
+            .attr("y", fontSize)
             .attr("font-family", "monospace")
-            .attr("font-size", "30");
+            .attr("font-size", "" + fontSize);
 
     });
 
@@ -206,9 +195,10 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
 
     var labelCounter = 1;
     function drawAnnotation(containingSequenceGroup, startCharIndex, endCharIndex) {
-        var firstSequenceFrame = containingSequenceGroup.selectAll("text.rna-seq").node().getBBox();
+        var firstSequence = containingSequenceGroup.selectAll("text.rna-seq").node();
+        var firstSequenceFrame = firstSequence.getBBox();
         var lastSequenceFrame = containingSequenceGroup.selectAll("text.rna-seq")[0].pop().getBBox();
-        var letterRectWidth = firstSequenceFrame.width / (to-from);
+        var letterRectWidth = firstSequenceFrame.width / firstSequence.textContent.length;
 
         function drawSurroundingFrame() {
             var annotationVMargin = 4;
@@ -220,7 +210,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                 .attr("x", titleIndent.x + firstSequenceFrame.x + startCharIndex * letterRectWidth)
                 .attr("width", letterRectWidth * (endCharIndex - startCharIndex))
                 .attr("y", titleIndent.y + firstSequenceFrame.y - annotationVMargin)
-                .attr("height", lastSequenceFrame.y + lastSequenceFrame.height - firstSequenceFrame.y + 50 * sequenceNum + 2 * annotationVMargin)
+                .attr("height", lastSequenceFrame.y + lastSequenceFrame.height - firstSequenceFrame.y + fontSize * sequenceNum + 2 * annotationVMargin)
                 .attr("fill-opacity", "0.0")
                 .attr("stroke-width", "3")
                 .attr("stroke", "#000");
