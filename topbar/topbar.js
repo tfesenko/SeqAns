@@ -1,5 +1,31 @@
-function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
+var modal = document.getElementById('import-file-window');
+
+document.getElementById("cancel-load-file").onclick = function() {
+    closeImportFileWindow();
+};
+
+document.getElementById("load-fasta-file").onclick = function() {
+    handleFileSelect();
+    closeImportFileWindow();
+};
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        closeImportFileWindow();
+    }
+};
+
+function openImportFileWindow() {
+    modal.style.display = "block";
+};
+
+function closeImportFileWindow() {
+    modal.style.display = "none";
+}
+
+function handleFileSelect() {
+    var files = document.getElementById('files').files;
 
     var output = [];
     for (var i = 0, f; f = files[i]; i++) {
@@ -16,7 +42,7 @@ function handleFileSelect(evt) {
                     var seq = new Nt.Seq().readFASTA(">" + fastaSeq).sequence();
                     // TODO parse sequence labels
                     asJson[i] = {"sequence": seq, "title": "Sequence " + i + " of " + fastaSegments.length};
-                //    debugger;
+                    //    debugger;
                 }
                 draw(asJson);
             };

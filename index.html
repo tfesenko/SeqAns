@@ -2,10 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="topbar/topbar.css">
+
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="./lib/FileSaver.js"></script>
   <script src="./lib/ntseq.js"></script>
-  <script src="./load-inputs.js"></script>
   <script src="./sequence-annotations.js"></script>
   <style>
 
@@ -14,61 +15,6 @@
     stroke-width: 3;
     stroke: #000;
   }
-
-  .navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    font-family: Optima, "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
-    overflow: hidden;
-    background-color: #144023;
-  }
-
-  .navbar span {
-    float: left;
-    color: white;
-    font-family: Optima, "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
-  }
-
-  li a, .dropbtn {
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-
-  li a:hover, .dropdown:hover .dropbtn {
-    background-color: #267a43;
-  }
-
-  li.dropdown {
-    display: inline-block;
-  }
-
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-
-  .dropdown-content a:hover {background-color: #f1f1f1}
-
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-
   </style>
 
   <script type="text/javascript">
@@ -108,17 +54,25 @@
       <span class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">File</a>
         <div class="dropdown-content">
-          <a href="#">Load Sequences from a FASTA file:</a>
-          <input type="file" id="files" name="files[]"/>
+          <a href="#" onclick="openImportFileWindow();">Import FASTA file</a>
           <a href="#" onclick="downloadSVG('sequence.svg')">Save as SVG</a>
         </div>
       </span>
     </div>
 
-    <script type="text/javascript">
+    <div id="import-file-window" class="modal">
+      <div class="modal-content">
+        <h2>Upload a FASTA file:</h2>
+        <input type="file" id="files" name="files[]"/>
+        <div class="right">
+          <button id="cancel-load-file" class="btn cancel">Cancel</button>
+          <button id="load-fasta-file" class="btn">Load file</button>
+        </div>
+      </div>
+    </div>
 
-      document.getElementById('files').addEventListener('change', handleFileSelect, false);
-
+      <script src="topbar/topbar.js"></script>
+      <script type="text/javascript">
 
       var margin = 75,
       width = 1400 - margin,
