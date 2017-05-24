@@ -1,17 +1,19 @@
 function draw(data) {
-    var lineLength = 50;
+    var lineLength = 100;
     var numberOfLines = Math.max.apply(null, data.map(function (seq) {
             return seq.sequence.length;
         })) / lineLength;
     for (var i = 0; i < numberOfLines; i++) {
-        drawLine(data, i, lineLength, numberOfLines);
+        var svg = drawLine(data, i, lineLength, numberOfLines);
+        var bbox = svg.node().getBBox();
+        svg.attr("width", "" + (bbox.width + 20)).attr("height", "" + (bbox.height + 50));
     }
 };
 function drawLine(data, lineIndex, lineLength, numberOfLines) {
     "use strict";
     var from = lineIndex * lineLength;
     var to = lineIndex * lineLength + lineLength;
-    var rootGroup = svg.append("svg").attr("width", "1200").attr("height", "1600");
+    var rootGroup = svg.append("svg");
     var titleIndent = {x:120, y:20};
     var fontSize = 16;
     var titleFontSize = 12;
@@ -107,7 +109,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
     // From http://bl.ocks.org/GerHobbelt/2653660
     function make_editable(d, field)
     {
-        console.log("make_editable", arguments);
+       // console.log("make_editable", arguments);
 
         this
             .on("mouseover", function() {
@@ -118,7 +120,6 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             })
             .on("click", function(d) {
                 var p = this.parentNode;
-                console.log(this, arguments);
 
                 // inject a HTML form to edit the content here...
 
@@ -152,7 +153,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                     .attr("style", "width: 294px;")
                     // make the form go away when you jump out (form looses focus) or hit ENTER:
                     .on("blur", function() {
-                        console.log("blur", this, arguments);
+                        // console.log("blur", this, arguments);
 
                         var txt = inp.node().value;
 
@@ -164,7 +165,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                         p_el.select("foreignObject").remove();
                     })
                     .on("keypress", function() {
-                        console.log("keypress", this, arguments);
+                        // console.log("keypress", this, arguments);
 
                         // IE fix
                         if (!d3.event)
