@@ -14,6 +14,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
     var rootGroup = svg.append("svg").attr("width", "1200").attr("height", "1600");
     var titleIndent = {x:120, y:20};
     var fontSize = 16;
+    var titleFontSize = 12;
 
     rootGroup.selectAll("g.title")
         .data(data)
@@ -31,6 +32,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                 .text(seq.title)
                 .attr("x", titleIndent.x)
                 .attr("y", 17)
+                .attr("font-size", "" + titleFontSize)
                 .call(make_editable, "title");
 
             // d3.select(this).append("text")
