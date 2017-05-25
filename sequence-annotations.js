@@ -32,7 +32,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             d3.select(this).append("text")
                 .attr("class", "title")
                 .text(seq.title)
-                .attr("x", titleIndent.x)
+                .attr("x", titleIndent.x - 4)
                 .attr("y", 17)
                 .attr("font-size", "" + titleFontSize)
                 .call(make_editable, "title");
