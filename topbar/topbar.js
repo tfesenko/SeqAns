@@ -40,15 +40,14 @@ function handleFileSelect() {
                     var fastaSeq = fastaSegments[i];
                     // NtSeq does not support several sequences in the same file
                     var seq = new Nt.Seq().readFASTA(">" + fastaSeq).sequence();
-                    // TODO parse sequence labels
                     // Example >pseuAeru_MTB_1|chr.trna <...>
                     function getLabel(seq) {
                         var segments = seq.split("|");
                         return segments.length > 0 ? segments[0].substr(1) : "Sequence " + i + " of " + fastaSegments.length;
                     };
                     asJson[i] = {"sequence": seq, "title": getLabel(fastaSeq)};
-                    //    debugger;
                 }
+                svg.selectAll("*").remove();
                 draw(asJson);
             };
         })(f);
