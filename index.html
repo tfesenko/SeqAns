@@ -1,87 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="topbar/topbar.css">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="topbar/topbar.css">
 
-  <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script src="./lib/FileSaver.js"></script>
-  <script src="./lib/ntseq.js"></script>
-  <script src="./sequence-annotations.js"></script>
-  <style>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="./lib/FileSaver.js"></script>
+    <script src="./lib/ntseq.js"></script>
+    <script src="./sequence-annotations.js"></script>
+    <script src="topbar/downloadSVG.js"></script>
+    <style>
 
-  .annotation-rect {
-    fill-opacity: 0.0;
-    stroke-width: 3;
-    stroke: #000;
-  }
-  </style>
-
-  <script type="text/javascript">
-
-
-    function downloadSVG(fileName){
-        
-        try {
-            var isFileSaverSupported = !!new Blob();
-        } catch (e) {
-            alert("blob not supported");
+        .annotation-rect {
+            fill-opacity: 0.0;
+            stroke-width: 3;
+            stroke: #000;
         }
+    </style>
 
-        var currY = 0;
-        var gap = 30;
 
-        var html = d3.selectAll("svg")[0].map(function(g, i) {
-          //  debugger;
-            var svgStr = "<!--LINE " + (i+1) + "-->\n<svg y='" + (currY + gap) + "'>" + g.innerHTML + "</svg>";
-            currY += parseInt(g.getAttribute("height") + gap);
-            return svgStr;
-        }).join("\n");
+</head>
+<body>
 
-        html = '<svg xmlns="http://www.w3.org/2000/svg">\n'
-            + html +
-            '\n</svg>';
-        var blob = new Blob([html], {type: "image/svg+xml"});
-        saveAs(blob, fileName);
-    };
-    </script>
-  </head>
-
-  <body>
-
-    <div class="navbar">
-      <span><a href="javascript:void(0)" class="dropbtn">Sequence Annotations</a></span>
-      <span class="dropdown">
+<div class="navbar">
+    <span><a href="javascript:void(0)" class="dropbtn">Sequence Annotations</a></span>
+    <span class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">File</a>
         <div class="dropdown-content">
           <a href="#" onclick="openImportFileWindow();">Import FASTA file</a>
           <a href="#" onclick="downloadSVG('sequence.svg')">Save as SVG</a>
         </div>
       </span>
-    </div>
+</div>
 
-    <div id="import-file-window" class="modal">
-      <div class="modal-content">
+<div id="import-file-window" class="modal">
+    <div class="modal-content">
         <h2>Upload a FASTA file:</h2>
         <input type="file" id="files" name="files[]"/>
         <div class="right">
-          <button id="cancel-load-file" class="btn cancel">Cancel</button>
-          <button id="load-fasta-file" class="btn">Load file</button>
+            <button id="cancel-load-file" class="btn cancel">Cancel</button>
+            <button id="load-fasta-file" class="btn">Load file</button>
         </div>
-      </div>
     </div>
+</div>
 
-      <script src="topbar/topbar.js"></script>
-      <script type="text/javascript">
+<script src="topbar/topbar.js"></script>
+<script type="text/javascript">
 
-      var margin = 75,
-      width = 1400 - margin,
-      height = 5600 - margin;
+    var margin = 75,
+        width = 1400 - margin,
+        height = 5600 - margin;
 
     var svg = d3.select("body")
-      .append("div");
-//      .attr("width", width + margin)
-//      .attr("height", height + margin);
-    </script>
-  </body>
-  </html>
+        .append("div");
+    //      .attr("width", width + margin)
+    //      .attr("height", height + margin);
+</script>
+</body>
+</html>
