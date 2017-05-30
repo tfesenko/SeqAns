@@ -47,7 +47,7 @@ function handleFileSelect() {
                     };
                     asJson[i] = {"sequence": seq, "title": getLabel(fastaSeq)};
                 }
-                svg.selectAll("*").remove();
+                clearSequenceGroup();
 
                 draw({"sequences": asJson, "annotations": []});
             };
@@ -55,4 +55,8 @@ function handleFileSelect() {
 
         reader.readAsText(f);
     }
+}
+
+function clearSequenceGroup() {
+    svg.selectAll("*").remove();
 }

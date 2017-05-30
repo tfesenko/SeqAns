@@ -24,13 +24,34 @@
 
 <div class="navbar">
     <span><a href="javascript:void(0)" class="dropbtn">Sequence Annotations</a></span>
+
     <span class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">File</a>
         <div class="dropdown-content">
-          <a href="#" onclick="openImportFileWindow();">Import FASTA file</a>
-          <a href="#" onclick="downloadSVG('sequence.svg')">Save as SVG</a>
+          <a href="#" onclick="downloadSVG('sequence.svg');">Save as SVG</a>
         </div>
-      </span>
+    </span>
+
+    <span class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Edit</a>
+        <div class="dropdown-content">
+          <a href="#" onclick="openImportFileWindow();">Import FASTA file...</a>
+          <a href="#" onclick="clearSequenceGroup();">Clear</a>
+          <a href="#" onclick="">Add annotation [Enter] (TBD)</a>
+        </div>
+    </span>
+
+    <span class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Preferences</a>
+    </span>
+
+    <span class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Help</a>
+        <div class="dropdown-content">
+          <a href="https://github.com/tfesenko/SeqAns" target="_blank" >About SeqAns</a>
+          <a href="https://github.com/tfesenko/SeqAns/issues/new" target="_blank" >Report a bug</a>
+        </div>
+    </span>
 </div>
 
 <div id="import-file-window" class="modal">
