@@ -17,6 +17,7 @@ function draw(data) {
     }
     svg.attr("width", width).attr("height", currY);
 };
+
 function drawLine(data, lineIndex, lineLength, numberOfLines) {
     "use strict";
     var from = lineIndex * lineLength;
@@ -205,43 +206,6 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
     };
 
     var labelCounter = 1;
-    function drawAnnotation(sequenceLineSVG, startCharIndex, length, label) {
-        var firstSequence = sequenceLineSVG.selectAll("text.rna-seq").node();
-        var firstSequenceFrame = firstSequence.getBBox();
-        var lastSequenceFrame = sequenceLineSVG.selectAll("text.rna-seq")[0].pop().getBBox();
-        var letterRectWidth = firstSequenceFrame.width / firstSequence.textContent.length;
-
-        function drawSurroundingFrame() {
-            var annotationVMargin = 4;
-
-            var sequenceNum = data.length - 1;
-
-            sequenceLineSVG.append('rect')
-                .attr("class", "annotation-rect")
-                .attr("x", titleIndent.x + firstSequenceFrame.x + startCharIndex * letterRectWidth)
-                .attr("width", letterRectWidth * length)
-                .attr("y", titleIndent.y + firstSequenceFrame.y - annotationVMargin)
-                .attr("height", lastSequenceFrame.y + lastSequenceFrame.height - firstSequenceFrame.y + fontSize * sequenceNum + 2 * annotationVMargin)
-                .attr("fill-opacity", "0.0")
-                .attr("stroke-width", "3")
-                .attr("stroke", "#000");
-        };
-
-        function drawLabel() {
-            var labelVOffset = 10;
-            var frameX = firstSequenceFrame.x + startCharIndex * letterRectWidth;
-            var frameY = firstSequenceFrame.y - labelVOffset;
-            sequenceLineSVG.append("g")
-                .attr("transform", "translate(" + (titleIndent.x + frameX) + "," + (titleIndent.y + frameY) + ")")
-                .append("text")
-                .attr("class", "annotation-label")
-                .text(labelCounter);
-        };
-        drawSurroundingFrame();
-        drawLabel();
-
-    };
-
     d3.selectAll("body")
         .on("keydown", function (d) {
             if (event.keyCode == 13 &&
@@ -252,10 +216,51 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                 var length = Math.abs(focusOffset - anchorOffset);
                 var sequenceLineSVG = window.getSelection().anchorNode.parentElement.parentElement.parentElement;
               //  var i = d3.select("svg").selectAll("svg")[0].indexOf(sequenceLineSVG);
-                drawAnnotation(d3.select(sequenceLineSVG), startCharIndex, length, "" + labelCounter);
+                drawAnnotationInSVG(d3.select(sequenceLineSVG), startCharIndex, length, "" + labelCounter);
                 labelCounter++;
             }
         });
     return rootGroup;
+
+};
+
+function drawAnnotation(startCharIndex, length, label) {
+
+}
+
+function drawAnnotationInSVG(sequenceLineSVG, startCharIndex, length, label) {
+    var firstSequence = sequenceLineSVG.selectAll("text.rna-seq").node();
+    var firstSequenceFrame = firstSequence.getBBox();
+    var lastSequenceFrame = sequenceLineSVG.selectAll("text.rna-seq")[0].pop().getBBox();
+    var letterRectWidth = firstSequenceFrame.width / firstSequence.textContent.length;
+
+    function drawSurroundingFrame() {
+        var annotationVMargin = 4;
+
+        var sequenceNum = data.length - 1;
+
+        sequenceLineSVG.append('rect')
+            .attr("class", "annotation-rect")
+            .attr("x", titleIndent.x + firstSequenceFrame.x + startCharIndex * letterRectWidth)
+            .attr("width", letterRectWidth * length)
+            .attr("y", titleIndent.y + firstSequenceFrame.y - annotationVMargin)
+            .attr("height", lastSequenceFrame.y + lastSequenceFrame.height - firstSequenceFrame.y + fontSize * sequenceNum + 2 * annotationVMargin)
+            .attr("fill-opacity", "0.0")
+            .attr("stroke-width", "3")
+            .attr("stroke", "#000");
+    };
+
+    function drawLabel() {
+        var labelVOffset = 10;
+        var frameX = firstSequenceFrame.x + startCharIndex * letterRectWidth;
+        var frameY = firstSequenceFrame.y - labelVOffset;
+        sequenceLineSVG.append("g")
+            .attr("transform", "translate(" + (titleIndent.x + frameX) + "," + (titleIndent.y + frameY) + ")")
+            .append("text")
+            .attr("class", "annotation-label")
+            .text(labelCounter);
+    };
+    drawSurroundingFrame();
+    drawLabel();
 
 };
