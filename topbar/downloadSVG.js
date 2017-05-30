@@ -6,12 +6,23 @@ function downloadSVG(fileName) {
         alert("blob not supported");
     }
 
-    const svgAsText = getSVGAsText(d3.selectAll("svg")[0]);
+    const svgAsText = getSVGAsText(d3.select("svg")[0][0].innerHTML);
     const blob = new Blob([svgAsText], {type: "image/svg+xml"});
     saveAs(blob, fileName);
 }
 
-function getSVGAsText(svgNodes) {
+function getSVGAsText(svgNodeText) {
+    var result =
+
+    `
+<svg xmlns="http://www.w3.org/2000/svg">
+    ${svgNodeText}
+</svg>
+    `;
+    return result;
+}
+
+function getSVGNodesAsText(svgNodes) {
     const gap = 30;
     let currY = 0;
 
@@ -26,9 +37,5 @@ function getSVGAsText(svgNodes) {
         return svgLineAsText;
     }).join("\n");
 
-    return
-        `
-    <svg xmlns="http://www.w3.org/2000/svg">
-        ${svgBodyAsText}
-    </svg>`;
+    return getSVGAsText(svgBodyAsText);
 }
