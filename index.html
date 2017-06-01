@@ -9,6 +9,7 @@
     <script src="./lib/ntseq.js"></script>
     <script src="./sequence-annotations.js"></script>
     <script src="topbar/downloadSVG.js"></script>
+    <script src="topbar/default.js"></script>
     <style>
 
         .annotation-rect {
@@ -74,6 +75,7 @@
 
     var svg = d3.select("body")
         .append("div").append("svg");
+    draw(JSON.parse(defaultContents));
 </script>
 </body>
 </html>
