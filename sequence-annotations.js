@@ -71,6 +71,8 @@ function updateAnnotations() {
         .append("text")
         .attr("class", "annotation-label")
         .text(function(d) {return d.label;});
+
+    saveContentToStorage(JSON.stringify(globalData));
 }
 
 function drawAnnotation(absoluteStartCharIndex, length, label) {
@@ -266,7 +268,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             });
     };
 
-    var labelCounter = 1;
+    var labelCounter = globalData.annotations.length + 1;
     d3.selectAll("body")
         .on("keydown", function (d) {
             if (event.keyCode == 13 &&

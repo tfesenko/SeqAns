@@ -10,6 +10,7 @@
     <script src="./sequence-annotations.js"></script>
     <script src="topbar/downloadSVG.js"></script>
     <script src="topbar/default.js"></script>
+    <script src="localStorage.js"></script>
     <style>
 
         .annotation-rect {
@@ -75,7 +76,7 @@
 
     var svg = d3.select("body")
         .append("div").append("svg");
-    draw(JSON.parse(defaultContents));
+    draw(JSON.parse(getContentFromStorage()));
 </script>
 </body>
 </html>

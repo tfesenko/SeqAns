@@ -1,4 +1,4 @@
-defaultContents = `
+defaultContent = `
 {
   "sequences": [
     {

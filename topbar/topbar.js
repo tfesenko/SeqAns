@@ -59,4 +59,5 @@ function handleFileSelect() {
 
 function clearSequenceGroup() {
     svg.selectAll("*").remove();
+    saveContentToStorage(`{"sequences": [], "annotations": []}`);
 }
