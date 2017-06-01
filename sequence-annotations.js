@@ -1,4 +1,8 @@
 var lineLength = 50;
+var titleIndent = {x:120, y:20};
+var fontSize = 16;
+var titleFontSize = 12;
+
 function draw(data) {
     var numberOfLines = Math.max.apply(null, data.sequences.map(function (seq) {
             return seq.sequence.length;
@@ -23,9 +27,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
     var from = lineIndex * lineLength;
     var to = lineIndex * lineLength + lineLength;
     var rootGroup = svg.append("svg");
-    var titleIndent = {x:120, y:20};
-    var fontSize = 16;
-    var titleFontSize = 12;
+
 
     rootGroup.selectAll("g.title")
         .data(data)
@@ -229,36 +231,36 @@ function drawAnnotation(startCharIndex, length, label) {
 }
 
 function drawAnnotationInSVG(sequenceLineSVG, startCharIndex, length, label) {
-    var firstSequence = sequenceLineSVG.selectAll("text.rna-seq").node();
+    var firstSequence = sequenceLineSVG.selectAll("g.rna-seq").node();
     var firstSequenceFrame = firstSequence.getBBox();
-    var lastSequenceFrame = sequenceLineSVG.selectAll("text.rna-seq")[0].pop().getBBox();
+    var lastSequenceFrame = sequenceLineSVG.selectAll("g.rna-seq")[0].pop().getBBox();
     var letterRectWidth = firstSequenceFrame.width / firstSequence.textContent.length;
+    var sequenceNum = sequenceLineSVG.selectAll("g.rna-seq").size();
+    var sequenceLineSvgY = parseInt(sequenceLineSVG.node().getAttribute("y"));
+    var frameX = titleIndent.x + startCharIndex * letterRectWidth;
+    var frameY = sequenceLineSvgY + titleIndent.y;
 
     function drawSurroundingFrame() {
         var annotationVMargin = 4;
 
-        var sequenceNum = data.length - 1;
-
-        sequenceLineSVG.append('rect')
+        svg.append('rect')
             .attr("class", "annotation-rect")
-            .attr("x", titleIndent.x + firstSequenceFrame.x + startCharIndex * letterRectWidth)
+            .attr("x", frameX)
             .attr("width", letterRectWidth * length)
-            .attr("y", titleIndent.y + firstSequenceFrame.y - annotationVMargin)
-            .attr("height", lastSequenceFrame.y + lastSequenceFrame.height - firstSequenceFrame.y + fontSize * sequenceNum + 2 * annotationVMargin)
+            .attr("y", frameY - annotationVMargin)
+            .attr("height", sequenceNum * fontSize + 2 * annotationVMargin)
             .attr("fill-opacity", "0.0")
             .attr("stroke-width", "3")
             .attr("stroke", "#000");
     };
 
     function drawLabel() {
-        var labelVOffset = 10;
-        var frameX = firstSequenceFrame.x + startCharIndex * letterRectWidth;
-        var frameY = firstSequenceFrame.y - labelVOffset;
-        sequenceLineSVG.append("g")
-            .attr("transform", "translate(" + (titleIndent.x + frameX) + "," + (titleIndent.y + frameY) + ")")
+        var labelVOffset = 8;
+        svg.append("g")
+            .attr("transform", "translate(" + frameX + "," + (frameY - labelVOffset) + ")")
             .append("text")
             .attr("class", "annotation-label")
-            .text(labelCounter);
+            .text(label);
     };
     drawSurroundingFrame();
     drawLabel();
