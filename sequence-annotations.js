@@ -3,9 +3,12 @@ var titleIndent = {x:120, y:20};
 var fontSize = 16;
 var titleFontSize = 12;
 var globalData;
+var labelCounter = 1;
+
 
 function draw(data) {
     globalData = data;
+    labelCounter = globalData.annotations.length + 1;
     var numberOfLines = Math.max.apply(null, data.sequences.map(function (seq) {
             return seq.sequence.length;
         })) / lineLength;
@@ -268,21 +271,24 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             });
     };
 
-    var labelCounter = globalData.annotations.length + 1;
     d3.selectAll("body")
         .on("keydown", function (d) {
             if (event.keyCode == 13 &&
                 (d3.selectAll("text.rna-seq")[0].includes(window.getSelection().anchorNode.parentElement))) {
-                var anchorOffset = window.getSelection().anchorOffset;
-                var focusOffset = window.getSelection().focusOffset;
-                var startCharIndex = Math.min(focusOffset, anchorOffset);
-                var length = Math.abs(focusOffset - anchorOffset);
-                var sequenceLineSVG = window.getSelection().anchorNode.parentElement.parentElement.parentElement;
-                var lineIndex = d3.select("svg").selectAll("svg")[0].indexOf(sequenceLineSVG);
-                drawAnnotation(lineIndex * lineLength + startCharIndex, length, "" + labelCounter);
-                labelCounter++;
+                createAnnotationForSelection();
             }
         });
     return rootGroup;
 
+};
+
+function createAnnotationForSelection() {
+    var anchorOffset = window.getSelection().anchorOffset;
+    var focusOffset = window.getSelection().focusOffset;
+    var startCharIndex = Math.min(focusOffset, anchorOffset);
+    var length = Math.abs(focusOffset - anchorOffset);
+    var sequenceLineSVG = window.getSelection().anchorNode.parentElement.parentElement.parentElement;
+    var lineIndex = d3.select("svg").selectAll("svg")[0].indexOf(sequenceLineSVG);
+    drawAnnotation(lineIndex * lineLength + startCharIndex, length, "" + labelCounter);
+    labelCounter++;
 };
