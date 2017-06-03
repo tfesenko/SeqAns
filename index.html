@@ -37,9 +37,9 @@
     <span class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Edit</a>
         <div class="dropdown-content">
-          <a href="#" onclick="openImportFileWindow();">Import FASTA file...</a>
+          <a href="#" onclick="openImportFileWindow();">Import FASTA File...</a>
           <a href="#" onclick="clearSequenceGroup();">Clear</a>
-          <a href="#" onclick="createAnnotationForSelection();">Add annotation [Enter]</a>
+          <a href="#" onclick="createAnnotationForSelection();">Add Nnnotation [Enter]</a>
         </div>
     </span>
 
@@ -51,7 +51,8 @@
         <a href="javascript:void(0)" class="dropbtn">Help</a>
         <div class="dropdown-content">
           <a href="https://github.com/tfesenko/SeqAns" target="_blank" >About SeqAns</a>
-          <a href="https://github.com/tfesenko/SeqAns/issues/new" target="_blank" >Report a bug</a>
+          <a href="https://github.com/tfesenko/SeqAns/issues/new" target="_blank" >Report a Bug</a>
+          <a href="#" onclick="clearSequenceGroup();window.localStorage.clear();draw(JSON.parse(getContentFromStorage()));">Clear and Load a Sample Sequence</a>
         </div>
     </span>
 </div>
