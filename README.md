@@ -1,13 +1,15 @@
-https://tfesenko.github.io/SeqAns/
 # SeqAns = Sequence Annotations: annotation your DNA, RNA, or Protein Sequences online
-Annotate your sequences in easy steps
-1. Load a FASTA file
-It should contain all your sequences, an example of such file is [here]()
-2. (Optional) Change the name of sequences
+Annotate your sequences in five easy steps
+1. Open ahttps://tfesenko.github.io/SeqAns/ 
+2. Load a FASTA file
+Click on File > Import FASTA file:
+<a href="http://imgur.com/UBoIQ6H"><img src="http://i.imgur.com/UBoIQ6H.png" title="file import FASTA" /></a>
+The FASTA file should contain all your sequences, an example of such file is [here]()
+3. (Optional) Change the name of sequences
 SeqAns uses the string betweeen ">" and "|" as from NAFTA file sequence name, by you can change it by clicking on the sequence title and editing it.
-3. Annotate the sequences
+4. Annotate the sequences
 Select letters that you want to annotate in a sequence and press "Enter". (You can also use the Edit>Annotation action in the navbar). All other sequences will be selected.
-4. Save it as an SVG file
+5. Save it as an SVG file
 Save as SVG file by clicking on File>Save as SVG. The file will be saved in the browser's donwload folder as "sequence.svg"
 (Save as PNG is on the way)
 
