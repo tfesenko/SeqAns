@@ -1,17 +1,22 @@
 # SeqAns = Sequence Annotations: annotation your DNA, RNA, or Protein Sequences online
 Annotate your sequences in five easy steps
-1. Open ahttps://tfesenko.github.io/SeqAns/ 
+1. Open https://tfesenko.github.io/SeqAns/ 
 2. Load a FASTA file
 Click on File > Import FASTA file:
-<a href="http://imgur.com/UBoIQ6H"><img src="http://i.imgur.com/UBoIQ6H.png" title="file import FASTA" /></a>
+<img src="http://i.imgur.com/UBoIQ6H.png" alt="file import FASTA" width="200" />
+Then, Choose file in the file system and Load it: 
+<img src="http://i.imgur.com/QPKt12y.png" alt="FASTA choose and load" width="200" />
 The FASTA file should contain all your sequences, an example of such file is [here]()
 3. (Optional) Change the name of sequences
-SeqAns uses the string betweeen ">" and "|" as from NAFTA file sequence name, by you can change it by clicking on the sequence title and editing it.
+SeqAns uses the string betweeen ">" and "|" as from NAFTA file sequence name, by you can change it by clicking on the sequence title and editing it:
+<img src="http://i.imgur.com/9jebgO9.gif" alt="edit title" width="200" />
 4. Annotate the sequences
 Select letters that you want to annotate in a sequence and press "Enter". (You can also use the Edit>Annotation action in the navbar). All other sequences will be selected.
+
 5. Save it as an SVG file
 Save as SVG file by clicking on File>Save as SVG. The file will be saved in the browser's donwload folder as "sequence.svg"
-(Save as PNG is on the way)
+<img src="http://i.imgur.com/WGkdmlf.png" alt="save as SVG" width="200" />
+Save as PNG is on the way!
 
 ## SeqAns runs in your browser, no calls to the server
 Sequences are rendered in the browser using a JavaScript library called [d3.js (v3)](https://github.com/d3/d3/releases/v3.0.0).
