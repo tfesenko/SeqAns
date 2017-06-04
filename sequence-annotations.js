@@ -1,7 +1,4 @@
-var lineLength = 50;
-var titleIndent = {x:120, y:20};
-var fontSize = 16;
-var titleFontSize = 12;
+
 var globalData;
 var labelCounter = 1;
 
@@ -152,18 +149,11 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             .data(sequenceString)
             .enter().insert("rect", "text") // add the new Rectangles before text element
             .attr('fill', function (ch) {
-                switch (ch) {
-                    case 'G':
-                        return '#DDE2DE';
-                    case 'U', 'T':
-                        return '#F0C7D7';
-                    case 'A':
-                        return '#B7EAED';
-                    case 'C':
-                        return '#84BBBE';
-                    default:
-                        return 'white';
+                var color = peptideAndNucleotideColors[ch];
+                if (!color) {
+                    color = peptideAndNucleotideColors.default;
                 }
+                return color;
             })
             .attr("x", function (d2, i2) {
                 return textBox.x + i2 * textBox.width / sequenceString.length;
