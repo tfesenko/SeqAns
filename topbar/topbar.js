@@ -34,7 +34,7 @@ function handleFileSelect() {
         reader.onload = (function(theFile) {
             return function(e) {
                 var fileContents = e.target.result;
-                var fastaSegments = fileContents.split("\n>");
+                var fastaSegments = ("\n"+fileContents).split("\n>");
                 var asJson = [];
                 for (var i = 0; i < fastaSegments.length; i++) {
                     var fastaSeq = fastaSegments[i];
@@ -43,7 +43,7 @@ function handleFileSelect() {
                     // Example >pseuAeru_MTB_1|chr.trna <...>
                     function getLabel(seq) {
                         var segments = seq.split("|");
-                        return segments.length > 0 ? segments[0].substr(1) : "Sequence " + i + " of " + fastaSegments.length;
+                        return segments.length > 0 ? segments[0].substr(0) : "Sequence " + i + " of " + fastaSegments.length;
                     };
                     asJson[i] = {"sequence": seq, "title": getLabel(fastaSeq)};
                 }
