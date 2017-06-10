@@ -20,7 +20,7 @@ Save as PNG is on the way!
 
 ## SeqAns runs in your browser, no calls to the server
 Sequences are rendered in the browser using a JavaScript library called [d3.js (v3)](https://github.com/d3/d3/releases/v3.0.0).
-SeqAns uses [FileSaver.js](https://github.com/eligrey/FileSaver.js/) to save to file and [NtSeq.js](https://github.com/keithwhor/NtSeq) to parse FASTA files.
+SeqAns uses [FileSaver.js](https://github.com/eligrey/FileSaver.js/) to save to file.
 SeqAns also uses local storage to preserve editings.
 
 ## Running from sources

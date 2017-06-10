@@ -34,18 +34,12 @@ function handleFileSelect() {
         reader.onload = (function(theFile) {
             return function(e) {
                 var fileContents = e.target.result;
-                var fastaSegments = ("\n"+fileContents).split("\n>");
                 var asJson = [];
-                for (var i = 0; i < fastaSegments.length; i++) {
-                    var fastaSeq = fastaSegments[i];
-                    // NtSeq does not support several sequences in the same file
-                    var seq = new Nt.Seq().readFASTA(">" + fastaSeq).sequence();
-                    // Example >pseuAeru_MTB_1|chr.trna <...>
-                    function getLabel(seq) {
-                        var segments = seq.split("|");
-                        return segments.length > 0 ? segments[0].substr(0) : "Sequence " + i + " of " + fastaSegments.length;
-                    };
-                    asJson[i] = {"sequence": seq, "title": getLabel(fastaSeq)};
+                var re = /^>([^|]+)\|.*\n([^>]+)$/gm;
+                var match, i = 0;
+                while (match = re.exec(fileContents)) {
+                    asJson[i] = {"sequence": match[2], "title": match[1]};
+                    i++;
                 }
                 clearSequenceGroup();
 
