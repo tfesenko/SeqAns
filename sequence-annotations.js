@@ -1,4 +1,3 @@
-
 var globalData;
 var labelCounter = 1;
 
@@ -36,12 +35,15 @@ function updateAnnotations() {
         var lineIndex = Math.floor(d.startCharIndex / lineLength);
         return svg.selectAll("svg")[0][lineIndex];
     }
+
     function getStartCharIndex(d) {
         return d.startCharIndex % lineLength;
     }
+
     function getFrameX(d) {
         return titleIndent.x + getStartCharIndex(d) * letterRectWidth;
     }
+
     function getFrameY(d) {
         var sequenceLineSvg = getSequenceLineSvg(d);
         var sequenceLineSvgY = parseInt(sequenceLineSvg.getAttribute("y"));
@@ -53,9 +55,15 @@ function updateAnnotations() {
         .enter()
         .append("rect")
         .attr("class", "annotation-rect")
-        .attr("x", function(d) { return getFrameX(d);})
-        .attr("width", function(d) { return letterRectWidth * d.length;})
-        .attr("y", function(d) { return getFrameY(d) - annotationVMargin;})
+        .attr("x", function (d) {
+            return getFrameX(d);
+        })
+        .attr("width", function (d) {
+            return letterRectWidth * d.length;
+        })
+        .attr("y", function (d) {
+            return getFrameY(d) - annotationVMargin;
+        })
         .attr("height", sequenceNum * fontSize + 2 * annotationVMargin)
         .attr("fill-opacity", "0.0")
         .attr("stroke-width", "3")
@@ -67,10 +75,15 @@ function updateAnnotations() {
         .data(globalData.annotations)
         .enter()
         .append("g")
-        .attr("transform", function(d) {return "translate(" + getFrameX(d) + "," + (getFrameY(d) - labelVOffset) + ")";})
+        .attr("transform", function (d) {
+            return "translate(" + getFrameX(d) + "," + (getFrameY(d) - labelVOffset) + ")";
+        })
         .append("text")
         .attr("class", "annotation-label")
-        .text(function(d) {return d.label;});
+        .text(function (d) {
+            return d.label;
+        })
+        .call(makeEditable, "label");
 
     saveContentToStorage(JSON.stringify(globalData));
 }
@@ -97,7 +110,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
         .attr("class", "title")
         .attr("text-anchor", "end")
         .attr("transform", function (d, i) {
-            return "translate(" + 0 + "," + (titleIndent.y + i * fontSize )+ ")";
+            return "translate(" + 0 + "," + (titleIndent.y + i * fontSize ) + ")";
         })
         .each(function (seq) {
 
@@ -107,14 +120,8 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
                 .attr("x", titleIndent.x - 4)
                 .attr("y", 17)
                 .attr("font-size", "" + titleFontSize)
-                .call(make_editable, "title");
+                .call(makeEditable, "title");
 
-            // d3.select(this).append("text")
-            //     .attr("class", "subtitle")
-            //     .text("Line " + (lineIndex+1))
-            //     .attr("x", titleIndent.x)
-            //     .attr("y", fontSize+2)
-            //     .style("fill", "#999");
         });
     ;
 
@@ -126,7 +133,7 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
         .append("g")
         .attr("class", "rna-seq")
         .attr("transform", function (d, i) {
-            return "translate(" + titleIndent.x + "," + (titleIndent.y + i * fontSize )+ ")";
+            return "translate(" + titleIndent.x + "," + (titleIndent.y + i * fontSize ) + ")";
         });
 
     lineGroup.selectAll("g.rna-seq").each(function (sequenceString) {
@@ -170,97 +177,6 @@ function drawLine(data, lineIndex, lineLength, numberOfLines) {
             drawLetterBoxes(currGroup, sequenceString.sequence.slice(from, to), textBox, i);
         });
     });
-
-    // From http://bl.ocks.org/GerHobbelt/2653660
-    function make_editable(d, field)
-    {
-       // console.log("make_editable", arguments);
-
-        this
-            .on("mouseover", function() {
-                d3.select(this).style("fill", "red");
-            })
-            .on("mouseout", function() {
-                d3.select(this).style("fill", null);
-            })
-            .on("click", function(d) {
-                var p = this.parentNode;
-
-                // inject a HTML form to edit the content here...
-
-                // bug in the getBBox logic here, but don't know what I've done wrong here;
-                // anyhow, the coordinates are completely off & wrong. :-((
-                var xy = this.getBBox();
-                var p_xy = p.getBBox();
-
-                xy.x -= p_xy.x;
-                xy.y -= p_xy.y;
-
-                var el = d3.select(this);
-                var p_el = d3.select(p);
-
-                var frm = p_el.append("foreignObject");
-
-                var inp = frm
-                    .attr("x", xy.x)
-                    .attr("y", xy.y)
-                    .attr("width", 300)
-                    .attr("height", 25)
-                    .append("xhtml:form")
-                    .append("input")
-                    .attr("value", function() {
-                        // nasty spot to place this call, but here we are sure that the <input> tag is available
-                        // and is handily pointed at by 'this':
-                        this.focus();
-
-                        return d[field];
-                    })
-                    .attr("style", "width: 294px;")
-                    // make the form go away when you jump out (form looses focus) or hit ENTER:
-                    .on("blur", function() {
-                        // console.log("blur", this, arguments);
-
-                        var txt = inp.node().value;
-
-                        d[field] = txt;
-                        el
-                            .text(function(d) { return d[field]; });
-
-                        // Note to self: frm.remove() will remove the entire <g> group! Remember the D3 selection logic!
-                        p_el.select("foreignObject").remove();
-                    })
-                    .on("keypress", function() {
-                        // console.log("keypress", this, arguments);
-
-                        // IE fix
-                        if (!d3.event)
-                            d3.event = window.event;
-
-                        var e = d3.event;
-                        if (e.keyCode == 13)
-                        {
-                            if (typeof(e.cancelBubble) !== 'undefined') // IE
-                                e.cancelBubble = true;
-                            if (e.stopPropagation)
-                                e.stopPropagation();
-                            e.preventDefault();
-
-                            var txt = inp.node().value;
-
-                            d[field] = txt;
-                            el
-                                .text(function(d) { return d[field]; });
-
-                            // Update all Title labels
-                            d3.selectAll("text.title").text(function(d) { return d[field]; });
-                            // odd. Should work in Safari, but the debugger crashes on this instead.
-                            // Anyway, it SHOULD be here and it doesn't hurt otherwise.
-                            p_el.select("foreignObject").remove();
-                        }
-                    });
-            });
-    };
-
     d3.selectAll("body")
         .on("keydown", function (d) {
             if (event.keyCode == 13 &&
@@ -279,6 +195,76 @@ function createAnnotationForSelection() {
     var length = Math.abs(focusOffset - anchorOffset);
     var sequenceLineSVG = window.getSelection().anchorNode.parentElement.parentElement.parentElement;
     var lineIndex = d3.select("svg").selectAll("svg")[0].indexOf(sequenceLineSVG);
-    drawAnnotation(lineIndex * lineLength + startCharIndex, length, "" + labelCounter);
+    drawAnnotation(lineIndex * lineLength + startCharIndex, length, "Group" + labelCounter);
     labelCounter++;
+};
+
+function makeEditable(d, field) {
+    this
+        .on("mouseover", function () {
+            d3.select(this).style("fill", "#144023");
+        })
+        .on("mouseout", function () {
+            d3.select(this).style("fill", null);
+        })
+        .on("click", function (d) {
+            var labelGroup = this.parentNode;
+            var bbox = this.getBBox();
+            var parentBBox = labelGroup.getBBox();
+
+            bbox.x -= parentBBox.x;
+            bbox.y -= parentBBox.y;
+
+            var textElement = d3.select(this);
+            var parentElement = d3.select(labelGroup);
+
+            var foreignObject = parentElement.append("foreignObject");
+
+            var onFocusLost = function() {
+                d[field] = input.text();
+                textElement.text(input.text());
+                if (field == "title") {
+                  // Update all Title labels because the same label can be used in several rows
+                  d3.selectAll("text.title").text(function (d) {
+                      return d["title"];
+                  });
+                }
+                saveContentToStorage(JSON.stringify(globalData));
+
+                foreignObject.selectAll("*").remove();
+                foreignObject.remove();
+            };
+
+            var input = foreignObject
+                .attr("x", 0) // bbox.x
+                .attr("y", 0) //  bbox.y - 15
+                .attr("width", bbox.width)
+                .append("xhtml")
+                .attr("width", "auto")
+                .attr("style", "display: inline-block")
+                .append("div")
+                .text(d[field])
+                .attr("contentEditable", true)
+                .attr("style", "white-space: nowrap; background-color: #DCDCDC; font-size: " + titleFontSize + "pt;")
+                .on("mouseout", function () {
+                    onFocusLost();
+                })
+                .on("keypress", function () {
+                    // IE fix
+                    if (!d3.event)
+                        d3.event = window.event;
+
+                    var e = d3.event;
+                    if (e.keyCode == 13) {
+                        if (typeof(e.cancelBubble) !== 'undefined') // IE
+                            e.cancelBubble = true;
+                        if (e.stopPropagation)
+                            e.stopPropagation();
+                        e.preventDefault();
+                        onFocusLost();
+                    }
+                });
+                //input[0][0] is DOM element for d3.js input element
+                input[0][0].focus();
+        });
 };

@@ -76,7 +76,7 @@
         height = 5600 - margin;
 
     var svg = d3.select("body")
-        .append("div").append("svg");
+        .append("div").attr("id", "root").append("svg");
     draw(JSON.parse(getContentFromStorage()));
 </script>
 </body>
