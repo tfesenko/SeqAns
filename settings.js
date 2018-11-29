@@ -12,4 +12,3 @@ peptideAndNucleotideColors = {
     'A': '#B7EAED',
     'C': '#84BBBE'
 }
-
